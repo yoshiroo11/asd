@@ -26,28 +26,18 @@
       font-weight: bold;
     }
 
-    /* ✅ Container */
+    /* ✅ Container (grid na lang) */
     .stories-container {
-      overflow: hidden;
-      width: 100%;
-    }
-
-    .scroll-row {
-      display: flex;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: 20px;
-      width: max-content; /* important para sakto ang haba */
-      animation: scroll-left 100s linear infinite;
-    }
-    .scroll-row.reverse {
-      animation: scroll-right 100s linear infinite;
+      width: 100%;
     }
 
     /* ✅ Story Box */
     .story-box {
       background: #fff;
-      width: 200px;
       height: 200px;
-      flex-shrink: 0;
       padding: 10px;
       border-radius: 10px;
       box-shadow: 0 0 5px rgba(0,0,0,0.1);
@@ -75,16 +65,6 @@
       max-height: 80px;
       overflow: hidden;
       text-overflow: ellipsis;
-    }
-
-    /* ✅ Animation */
-    @keyframes scroll-left {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-    @keyframes scroll-right {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(50%); }
     }
 
     /* ✅ Modal */
@@ -120,17 +100,11 @@
   </style>
 </head>
 <body>
-  <a href="index.html">← Back to Home</a>
+  <a href="gege.html">← Back to Home</a>
   <h1>📖 All Shared Stories</h1>
 
-  <!-- ✅ Scrolling stories container -->
-  <div class="stories-container">
-    <div class="scroll-row" id="row1"></div>
-  </div>
-
-  <div class="stories-container" style="margin-top: 30px;">
-    <div class="scroll-row reverse" id="row2"></div>
-  </div>
+  <!-- ✅ Static grid stories -->
+  <div class="stories-container" id="storiesGrid"></div>
 
   <!-- ✅ Modal -->
   <div class="modal" id="storyModal">
@@ -144,18 +118,12 @@
 
   <script>
     const stories = JSON.parse(localStorage.getItem("stories")) || [];
-    const row1 = document.getElementById("row1");
-    const row2 = document.getElementById("row2");
+    const grid = document.getElementById("storiesGrid");
 
-    // ✅ Fill rows (loop seamless)
     if (stories.length === 0) {
-      row1.innerHTML = "<p>No stories shared yet. 💭</p>";
-      row2.innerHTML = "<p>No stories shared yet. 💭</p>";
+      grid.innerHTML = "<p>No stories shared yet. 💭</p>";
     } else {
-      // dalawang buong set para seamless
-      const loopedStories = [...stories, ...stories];
-
-      loopedStories.forEach((s, i) => {
+      stories.forEach((s) => {
         const div = document.createElement("div");
         div.className = "story-box";
         div.innerHTML = `
@@ -163,7 +131,7 @@
           <div class="story-preview">${s.story}</div>
         `;
         div.onclick = () => openModal(s);
-        (i % 2 === 0 ? row1 : row2).appendChild(div);
+        grid.appendChild(div);
       });
     }
 
