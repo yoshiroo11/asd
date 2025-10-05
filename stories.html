@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stories Shared - The Weight We Carry</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f9fb;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #3e497a;
+      margin-bottom: 30px;
+    }
+
+    a {
+      display: block;
+      text-align: center;
+      margin-bottom: 20px;
+      text-decoration: none;
+      color: #3e497a;
+      font-weight: bold;
+    }
+
+    /* ✅ Container */
+    .stories-container {
+      overflow: hidden;
+      width: 100%;
+    }
+
+    .scroll-row {
+      display: flex;
+      gap: 20px;
+      width: max-content; /* important para sakto ang haba */
+      animation: scroll-left 100s linear infinite;
+    }
+    .scroll-row.reverse {
+      animation: scroll-right 100s linear infinite;
+    }
+
+    /* ✅ Story Box */
+    .story-box {
+      background: #fff;
+      width: 200px;
+      height: 200px;
+      flex-shrink: 0;
+      padding: 10px;
+      border-radius: 10px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      cursor: pointer;
+      text-align: center;
+      transition: transform 0.2s;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+    .story-box:hover {
+      transform: scale(1.05);
+    }
+
+    .story-box strong {
+      font-size: 16px;
+      margin-bottom: 8px;
+      color: #3e497a;
+    }
+    .story-preview {
+      font-size: 14px;
+      color: #555;
+      max-height: 80px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* ✅ Animation */
+    @keyframes scroll-left {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    @keyframes scroll-right {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(50%); }
+    }
+
+    /* ✅ Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.6);
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+    }
+    .modal-content {
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 500px;
+      text-align: left;
+      position: relative;
+    }
+    .close {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 20px;
+      cursor: pointer;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <a href="gege.html">← Back to Home</a>
+  <h1>📖 All Shared Stories</h1>
+
+  <!-- ✅ Scrolling stories container -->
+  <div class="stories-container">
+    <div class="scroll-row" id="row1"></div>
+  </div>
+
+  <div class="stories-container" style="margin-top: 30px;">
+    <div class="scroll-row reverse" id="row2"></div>
+  </div>
+
+  <!-- ✅ Modal -->
+  <div class="modal" id="storyModal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <h2 id="modalName"></h2>
+      <p id="modalDate" style="color:gray;"></p>
+      <p id="modalStory"></p>
+    </div>
+  </div>
+
+  <script>
+    const stories = JSON.parse(localStorage.getItem("stories")) || [];
+    const row1 = document.getElementById("row1");
+    const row2 = document.getElementById("row2");
+
+    // ✅ Fill rows (loop seamless)
+    if (stories.length === 0) {
+      row1.innerHTML = "<p>No stories shared yet. 💭</p>";
+      row2.innerHTML = "<p>No stories shared yet. 💭</p>";
+    } else {
+      // dalawang buong set para seamless
+      const loopedStories = [...stories, ...stories];
+
+      loopedStories.forEach((s, i) => {
+        const div = document.createElement("div");
+        div.className = "story-box";
+        div.innerHTML = `
+          <strong>${s.name}</strong>
+          <div class="story-preview">${s.story}</div>
+        `;
+        div.onclick = () => openModal(s);
+        (i % 2 === 0 ? row1 : row2).appendChild(div);
+      });
+    }
+
+    // ✅ Modal functions
+    function openModal(story) {
+      document.getElementById("modalName").textContent = story.name;
+      document.getElementById("modalDate").textContent = story.date || "";
+      document.getElementById("modalStory").textContent = story.story;
+      document.getElementById("storyModal").style.display = "flex";
+    }
+
+    function closeModal() {
+      document.getElementById("storyModal").style.display = "none";
+    }
+
+    window.onclick = (e) => {
+      if (e.target.id === "storyModal") closeModal();
+    };
+  </script>
+</body>
+</html>
