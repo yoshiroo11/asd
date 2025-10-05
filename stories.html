@@ -1,164 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Stories Shared - The Weight We Carry</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stories Shared</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       background: #f7f9fb;
       padding: 20px;
     }
-
     h1 {
       text-align: center;
       color: #3e497a;
-      margin-bottom: 30px;
     }
-
-    a.back-home {
-      display: block;
-      text-align: center;
-      margin: 20px 0;
-      text-decoration: none;
-      color: #3e497a;
-      font-weight: bold;
-      transition: color 0.2s;
-    }
-    a.back-home:hover {
-      color: #1b2a55;
-    }
-
-    /* ✅ Container (grid) */
-    .stories-container {
+    #stories-container {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 20px;
-      width: 100%;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
     }
-
-    /* ✅ Story Box */
     .story-box {
       background: #fff;
-      height: 200px;
-      padding: 10px;
-      border-radius: 10px;
+      border-radius: 8px;
       box-shadow: 0 0 5px rgba(0,0,0,0.1);
-      cursor: pointer;
-      text-align: center;
-      transition: transform 0.2s;
+      padding: 15px;
+      aspect-ratio: 1 / 1; /* square shape */
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      align-items: center;
+      justify-content: space-between;
       overflow: hidden;
     }
-    .story-box:hover {
-      transform: scale(1.05);
-    }
-
-    .story-box strong {
-      font-size: 16px;
-      margin-bottom: 8px;
+    .story-box h3 {
+      margin: 0;
       color: #3e497a;
     }
-    .story-preview {
-      font-size: 14px;
-      color: #555;
-      max-height: 80px;
+    .story-box p {
+      flex: 1;
+      margin: 10px 0;
       overflow: hidden;
       text-overflow: ellipsis;
     }
-
-    /* ✅ Modal */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.6);
-      justify-content: center;
-      align-items: center;
-      z-index: 10;
-    }
-    .modal-content {
-      background: #fff;
-      padding: 30px;
-      border-radius: 10px;
-      width: 90%;
-      max-width: 500px;
-      text-align: left;
-      position: relative;
-    }
-    .close {
-      position: absolute;
-      top: 10px;
-      right: 15px;
-      font-size: 20px;
-      cursor: pointer;
-      color: #333;
+    .story-box small {
+      color: gray;
     }
   </style>
 </head>
 <body>
-  <!-- ✅ Back to Home sa taas -->
-  <a href="gege.html" class="back-home">← Back to Home</a>
+  <h1>📖 Stories Shared</h1>
+  <div id="stories-container"></div>
 
-  <h1>📖 All Shared Stories</h1>
+  <!-- Firebase -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    import { getFirestore, collection, getDocs } 
+      from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-  <!-- ✅ Static grid stories -->
-  <div class="stories-container" id="storiesGrid"></div>
-
-  <!-- ✅ Back to Home sa baba -->
-  <a href="gege.html" class="back-home">← Back to Home</a>
-
-  <!-- ✅ Modal -->
-  <div class="modal" id="storyModal">
-    <div class="modal-content">
-      <span class="close" onclick="closeModal()">&times;</span>
-      <h2 id="modalName"></h2>
-      <p id="modalDate" style="color:gray;"></p>
-      <p id="modalStory"></p>
-    </div>
-  </div>
-
-  <script>
-    const stories = JSON.parse(localStorage.getItem("stories")) || [];
-    const grid = document.getElementById("storiesGrid");
-
-    if (stories.length === 0) {
-      grid.innerHTML = "<p style='text-align:center;'>No stories shared yet. 💭</p>";
-    } else {
-      stories.forEach((s) => {
-        const div = document.createElement("div");
-        div.className = "story-box";
-        div.innerHTML = `
-          <strong>${s.name}</strong>
-          <div class="story-preview">${s.story}</div>
-        `;
-        div.onclick = () => openModal(s);
-        grid.appendChild(div);
-      });
-    }
-
-    // ✅ Modal functions
-    function openModal(story) {
-      document.getElementById("modalName").textContent = story.name;
-      document.getElementById("modalDate").textContent = story.date || "";
-      document.getElementById("modalStory").textContent = story.story;
-      document.getElementById("storyModal").style.display = "flex";
-    }
-
-    function closeModal() {
-      document.getElementById("storyModal").style.display = "none";
-    }
-
-    window.onclick = (e) => {
-      if (e.target.id === "storyModal") closeModal();
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyAq-o-H0Noqn2HcIanUyeDC7vjPep-VG9Q",
+      authDomain: "website-62fcc.firebaseapp.com",
+      projectId: "website-62fcc",
+      storageBucket: "website-62fcc.firebasestorage.app",
+      messagingSenderId: "644610818809",
+      appId: "1:644610818809:web:bd674cc3c6746eefa19828",
+      measurementId: "G-0RGSECJH7J"
     };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Load stories
+    async function loadStories() {
+      const container = document.getElementById("stories-container");
+      container.innerHTML = "<p>Loading stories...</p>";
+
+      try {
+        const querySnapshot = await getDocs(collection(db, "stories"));
+        container.innerHTML = ""; // clear
+
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          const div = document.createElement("div");
+          div.classList.add("story-box");
+          div.innerHTML = `
+            <h3>${data.name}</h3>
+            <p>${data.story}</p>
+            <small>${data.date}</small>
+          `;
+          container.appendChild(div);
+        });
+      } catch (e) {
+        console.error("Error loading stories: ", e);
+        container.innerHTML = "<p>Failed to load stories.</p>";
+      }
+    }
+
+    loadStories();
   </script>
 </body>
 </html>
