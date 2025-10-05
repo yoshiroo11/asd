@@ -1,6 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<!-- Firebase App (core SDK) -->
+<script type="module">
+  // Import Firebase functions
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs } 
+    from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+  // Your Firebase config (yung binigay sa'yo)
+  const firebaseConfig = {
+    apiKey: "AIzaSyAq-o-H0Noqn2HcIanUyeDC7vjPep-VG9Q",
+    authDomain: "website-62fcc.firebaseapp.com",
+    projectId: "website-62fcc",
+    storageBucket: "website-62fcc.firebasestorage.app",
+    messagingSenderId: "644610818809",
+    appId: "1:644610818809:web:bd674cc3c6746eefa19828",
+    measurementId: "G-0RGSECJH7J"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // Example: Add data to "messages"
+  async function saveMessage() {
+    try {
+      const docRef = await addDoc(collection(db, "messages"), {
+        name: "Juan",
+        message: "Hello Firebase!"
+      });
+      console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+  }
+
+  // Example: Get data from "messages"
+  async function getMessages() {
+    const querySnapshot = await getDocs(collection(db, "messages"));
+    querySnapshot.forEach((doc) => {
+      console.log(`${doc.id} =>`, doc.data());
+    });
+  }
+
+  // Tawagin para matest
+  saveMessage();
+  getMessages();
+</script>
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>The Weight We Carry</title>
@@ -268,3 +316,4 @@
 
 </body>
 </html>
+
