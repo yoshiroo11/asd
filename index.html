@@ -28,7 +28,6 @@
 	  color: white;
 	  padding: 20px 0;
 	  text-align: center;
-	
     }
     nav {
       background: #2c3e50;
@@ -98,24 +97,61 @@
       color: white;
       margin-top: 30px;
     }
-    #thankyou-message {
-      display: none;
-      text-align: center;
-      margin-top: 20px;
-      background: #e8f0ff;
-      padding: 15px;
-      border-radius: 10px;
-    }
-    #thankyou-message img {
-      max-width: 150px;
-      margin-top: 10px;
-    }
     .story-box {
       background: #fff;
       padding: 15px;
       border-radius: 8px;
       box-shadow: 0 0 5px rgba(0,0,0,0.1);
       margin-bottom: 15px;
+    }
+
+    /* ✅ Popup overlay */
+    #thankyou-message {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.6); 
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+    }
+    #thankyou-message .popup-content {
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      max-width: 400px;
+      animation: fadeIn 0.4s ease-in-out;
+      position: relative;
+    }
+    #thankyou-message img {
+      max-width: 150px;
+      margin-top: 10px;
+    }
+    /* Close button */
+    #thankyou-message .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #3e497a;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    #thankyou-message .close-btn:hover {
+      background: #2c3e50;
+    }
+    /* Animation */
+    @keyframes fadeIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
     }
   </style>
 </head>
@@ -166,11 +202,14 @@
       <center><button type="submit">Submit</button></center>
     </form>
 
-    <!-- ✅ Thank You message (hidden by default) -->
+    <!-- ✅ Thank You Popup -->
     <div id="thankyou-message">
-      <h2>✅ Thank you for sharing your story!</h2>
-      <p>Your words matter. 💙</p>
-      <img src="van.jpg" alt="Thank you image">
+      <div class="popup-content">
+        <button class="close-btn">&times;</button>
+        <h2>✅ Thank you for sharing your story!</h2>
+        <p>Your words matter. 💙</p>
+        <img src="van.jpg" alt="Thank you image">
+      </div>
     </div>
 
     <center><h3>📖 Stories Shared:</h3>
@@ -179,46 +218,10 @@
 
 
   <!-- ✅ JavaScript -->
-  
-  <script>
-  const form = document.getElementById('storyForm');
-  const thankyouDiv = document.getElementById('thankyou-message');
-
-  form.addEventListener('submit', function(event) {
-    event.preventDefault();
-
-    const name = document.getElementById('name').value || "Anonymous";
-    const story = document.getElementById('story').value;
-
-    if (story.trim() === "") {
-      alert("Please write a story before submitting.");
-      return;
-    }
-
-    // ✅ Kunin existing stories mula localStorage
-    let stories = JSON.parse(localStorage.getItem('stories')) || [];
-
-    // ✅ Idagdag ang bagong story
-    stories.unshift({ name, story, date: new Date().toLocaleString() });
-
-    // ✅ I-save ulit sa localStorage
-    localStorage.setItem('stories', JSON.stringify(stories));
-
-    // ✅ Show thank you message
-    thankyouDiv.style.display = "block";
-    setTimeout(() => {
-      thankyouDiv.style.display = "none";
-    }, 3000);
-
-    form.reset();
-  });
-</script>
-	
-  
   <script>
     const form = document.getElementById('storyForm');
-    const storiesDiv = document.getElementById('stories');
     const thankyouDiv = document.getElementById('thankyou-message');
+    const closeBtn = document.querySelector('#thankyou-message .close-btn');
 
     form.addEventListener('submit', function(event) {
       event.preventDefault();
@@ -231,20 +234,24 @@
         return;
       }
 
-      // ✅ Add story to the list
-      const storyBox = document.createElement('div');
-      storyBox.classList.add('story-box');
-      storyBox.innerHTML = `<strong>${name}</strong><p>${story}</p>`;
-      storiesDiv.prepend(storyBox);
+      let stories = JSON.parse(localStorage.getItem('stories')) || [];
+      stories.unshift({ name, story, date: new Date().toLocaleString() });
+      localStorage.setItem('stories', JSON.stringify(stories));
 
-      // ✅ Show thank you message briefly
-      thankyouDiv.style.display = "block";
+      // ✅ Show popup
+      thankyouDiv.style.display = "flex";
+
+      // ✅ Hide popup after 3 seconds (auto close)
       setTimeout(() => {
         thankyouDiv.style.display = "none";
-      }, 3000); // mawawala pagkatapos ng 3 seconds
+      }, 3000);
 
-      // Reset form
       form.reset();
+    });
+
+    // ✅ Manual close button
+    closeBtn.addEventListener('click', () => {
+      thankyouDiv.style.display = "none";
     });
   </script>
 
@@ -261,4 +268,3 @@
 
 </body>
 </html>
-
