@@ -14,16 +14,32 @@
       text-align: center;
       color: #3e497a;
     }
+    #stories-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
     .story-box {
       background: #fff;
-      padding: 15px;
       border-radius: 8px;
       box-shadow: 0 0 5px rgba(0,0,0,0.1);
-      margin-bottom: 15px;
+      padding: 15px;
+      aspect-ratio: 1 / 1; /* square shape */
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
     }
     .story-box h3 {
       margin: 0;
       color: #3e497a;
+    }
+    .story-box p {
+      flex: 1;
+      margin: 10px 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .story-box small {
       color: gray;
@@ -85,4 +101,5 @@
   </script>
 </body>
 </html>
+
 
