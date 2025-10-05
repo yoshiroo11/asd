@@ -16,11 +16,19 @@
       margin: 0;
       padding: 0;
     }
-    header {
+	
+	header {
       background: #3e497a;
-      color: black;
+      color: white;
       padding: 20px 0;
       text-align: center;
+	}
+	
+	h1 {
+	  color: white;
+	  padding: 20px 0;
+	  text-align: center;
+	
     }
     nav {
       background: #2c3e50;
@@ -42,7 +50,8 @@
       max-width: 800px;
       margin: auto;
     }
-    h1, h2 {
+     
+	h2 {
       text-align: center;
       color: #3e497a;
     }
@@ -113,7 +122,7 @@
 <body>
 
   <header>
-    <h1>The Weight We Carry</h1>
+    <h1 >The Weight We Carry</h1>
   </header>
 
   <nav>
@@ -165,11 +174,47 @@
     </div>
 
     <h3>📖 Stories Shared:</h3>
-    <div id="stories"></div>
+	<p><a href="stories.html" target="_blank">View all shared stories here</a></p>
   </section>
 
 
   <!-- ✅ JavaScript -->
+  
+  <script>
+  const form = document.getElementById('storyForm');
+  const thankyouDiv = document.getElementById('thankyou-message');
+
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const name = document.getElementById('name').value || "Anonymous";
+    const story = document.getElementById('story').value;
+
+    if (story.trim() === "") {
+      alert("Please write a story before submitting.");
+      return;
+    }
+
+    // ✅ Kunin existing stories mula localStorage
+    let stories = JSON.parse(localStorage.getItem('stories')) || [];
+
+    // ✅ Idagdag ang bagong story
+    stories.unshift({ name, story, date: new Date().toLocaleString() });
+
+    // ✅ I-save ulit sa localStorage
+    localStorage.setItem('stories', JSON.stringify(stories));
+
+    // ✅ Show thank you message
+    thankyouDiv.style.display = "block";
+    setTimeout(() => {
+      thankyouDiv.style.display = "none";
+    }, 3000);
+
+    form.reset();
+  });
+</script>
+	
+  
   <script>
     const form = document.getElementById('storyForm');
     const storiesDiv = document.getElementById('stories');
