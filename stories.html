@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Stories Shared</title>
   <style>
-    body {
+body {
       font-family: Arial, sans-serif;
       background: #f7f9fb;
       padding: 20px;
@@ -17,7 +17,7 @@
     .back-home {
       display: block;
       width: fit-content;
-      margin: 10px auto 20px auto;
+      margin: 10px auto 10px auto;
       padding: 10px 20px;
       background: #3e497a;
       color: #fff;
@@ -26,25 +26,45 @@
       box-shadow: 0 0 5px rgba(0,0,0,0.1);
       transition: 0.3s;
     }
+    .back-home:hover {
+      background: #2c365e;
+    }
+    #toggle-music {
+      display: block;
+      width: fit-content;
+      margin: 10px auto 20px auto;
+      padding: 10px 20px;
+      background: #6c63ff;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    #toggle-music:hover {
+      background: #4b42b5;
+    }
     #stories-container {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 15px;
       margin-top: 20px;
-    
-    .back-home:hover {
-      background: #2c365e;
     }
     .story-box {
       background: #fff;
       border-radius: 8px;
       box-shadow: 0 0 5px rgba(0,0,0,0.1);
       padding: 15px;
-      aspect-ratio: 1 / 1; /* square shape */
+      aspect-ratio: 1 / 1;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .story-box:hover {
+      transform: scale(1.03);
     }
     .story-box h3 {
       margin: 0;
