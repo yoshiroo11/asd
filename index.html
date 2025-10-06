@@ -1,4 +1,4 @@
-<!DOCTYPE html><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -63,6 +63,30 @@
       font-size: 16px;
     }
     button:hover { background: #2c3e50; }
+
+    /* color picker grid */	
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 40px);
+      gap: 8px;
+      justify-content: center;
+      margin-top: 10px;
+    }
+    .color-option {
+      width: 40px;
+      height: 40px;
+      border-radius: 6px;
+      border: 2px solid #ccc;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .color-option:hover {
+      transform: scale(1.1);
+    }
+    .color-option.selected {
+      border: 3px solid #3e497a;
+    }
+
     footer {
       text-align: center;
       padding: 15px;
@@ -145,7 +169,7 @@
 
   <section id="share">
     <h2>Share Your Story</h2>
-    <p>Use the form below to express what’s on your heart. No names are required — just your honest words. Remember: you are not alone.</p>
+    <p>Use the form below to express what’s on your heart. Choose a color that matches your mood before submitting.</p>
 
     <!-- Form -->
     <form id="storyForm">
@@ -154,6 +178,20 @@
 
       <label for="story">Your Story:</label>
       <textarea id="story" name="story" rows="6" placeholder="Write your thoughts, feelings, or story here..."></textarea>
+
+      <label>Choose a Color:</label>
+      <div class="color-grid" id="colorGrid">
+        <div class="color-option" style="background:#000;" data-color="#000"></div>
+        <div class="color-option" style="background:#3e497a;" data-color="#3e497a"></div>
+        <div class="color-option" style="background:#ff595e;" data-color="#ff595e"></div>
+        <div class="color-option" style="background:#8ac926;" data-color="#8ac926"></div>
+        <div class="color-option" style="background:#1982c4;" data-color="#1982c4"></div>
+        <div class="color-option" style="background:#6a4c93;" data-color="#6a4c93"></div>
+        <div class="color-option" style="background:#ffca3a;" data-color="#ffca3a"></div>
+        <div class="color-option" style="background:#ff9f1c;" data-color="#ff9f1c"></div>
+        <div class="color-option" style="background:#b5838d;" data-color="#b5838d"></div>
+        <div class="color-option" style="background:#e5989b;" data-color="#e5989b"></div>
+      </div>
 
       <center><button type="submit">Submit</button></center>
     </form>
@@ -197,6 +235,16 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
+    let selectedColor = "#000";
+    const colorOptions = document.querySelectorAll(".color-option");
+    colorOptions.forEach(option => {
+      option.addEventListener("click", () => {
+        colorOptions.forEach(o => o.classList.remove("selected"));
+        option.classList.add("selected");
+        selectedColor = option.dataset.color;
+      });
+    });
+
     const form = document.getElementById("storyForm");
     const thankyouDiv = document.getElementById("thankyou-message");
     const closeBtn = document.querySelector("#thankyou-message .close-btn");
@@ -216,6 +264,7 @@
         await addDoc(collection(db, "stories"), {
           name: name,
           story: story,
+          color: selectedColor,
           date: new Date().toLocaleString()
         });
 
@@ -225,6 +274,9 @@
         }, 3000);
 
         form.reset();
+        colorOptions.forEach(o => o.classList.remove("selected"));
+        selectedColor = "#000";
+
       } catch (err) {
         console.error("Error adding document:", err);
         alert("Something went wrong while saving your story.");
