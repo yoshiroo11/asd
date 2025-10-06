@@ -207,25 +207,6 @@
 
     loadStories();
 
-    // Music controls
-    const music = document.getElementById('bg-music');
-    const toggleBtn = document.getElementById('toggle-music');
-
-    toggleBtn.addEventListener('click', () => {
-      if (music.paused) {
-        music.play();
-        music.muted = false;
-        toggleBtn.textContent = "🔇 Pause Music";
-      } else {
-        music.pause();
-        toggleBtn.textContent = "🔊 Play Music";
-      }
-    });
-
-    setTimeout(() => {
-      music.muted = false;
-    }, 1000);
-
     // Modal controls
     const modal = document.getElementById("story-modal");
     const closeBtn = document.querySelector(".close");
