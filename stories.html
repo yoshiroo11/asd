@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Stories Shared</title>
   <style>
-body {
+    body {
       font-family: Arial, sans-serif;
       background: #f7f9fb;
       padding: 20px;
@@ -79,13 +79,78 @@ body {
     .story-box small {
       color: gray;
     }
+
+    /* Modal CSS */
+    .modal {
+      display: none; 
+      position: fixed; 
+      z-index: 1000; 
+      padding-top: 100px; 
+      left: 0; 
+      top: 0; 
+      width: 100%; 
+      height: 100%; 
+      background-color: rgba(0,0,0,0.6);
+    }
+    .modal-content {
+      background: #fff;
+      margin: auto;
+      padding: 20px;
+      border-radius: 10px;
+      width: 80%;
+      max-width: 500px;
+      aspect-ratio: 1 / 1;
+      overflow-y: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      display: flex;
+      flex-direction: column;
+    }
+    .modal-content h3 {
+      color: #3e497a;
+      margin-bottom: 10px;
+    }
+    .modal-content p {
+      flex: 1;
+      white-space: pre-wrap;
+    }
+    .modal-content small {
+      color: gray;
+    }
+    .close {
+      color: #aaa;
+      font-size: 24px;
+      font-weight: bold;
+      cursor: pointer;
+      align-self: flex-end;
+    }
+    .close:hover {
+      color: #000;
+    }
   </style>
 </head>
 <body>
   <h1>📖 Stories Shared</h1>
-  <a href="index.html" class="back-home">🏠 Back to Home</a>
+  <a href="gege.html" class="back-home">🏠 Back to Home</a>
+  <button id="toggle-music">🔊 Play/Pause Music</button>
 
-  
+  <div id="stories-container"></div>
+
+  <!-- Audio with autoplay muted -->
+  <audio id="bg-music" autoplay loop muted>
+  <source src="Burnout.mp3" type="audio/mpeg">
+</audio>
+
+  </audio>
+
+  <!-- Modal -->
+  <div id="story-modal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h3 id="modal-title"></h3>
+      <p id="modal-text"></p>
+      <small id="modal-date"></small>
+    </div>
+  </div>
 
   <!-- Firebase -->
   <script type="module">
@@ -93,7 +158,6 @@ body {
     import { getFirestore, collection, getDocs } 
       from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-    // Firebase config
     const firebaseConfig = {
       apiKey: "AIzaSyAq-o-H0Noqn2HcIanUyeDC7vjPep-VG9Q",
       authDomain: "website-62fcc.firebaseapp.com",
@@ -104,18 +168,16 @@ body {
       measurementId: "G-0RGSECJH7J"
     };
 
-    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // Load stories
     async function loadStories() {
       const container = document.getElementById("stories-container");
       container.innerHTML = "<p>Loading stories...</p>";
 
       try {
         const querySnapshot = await getDocs(collection(db, "stories"));
-        container.innerHTML = ""; // clear
+        container.innerHTML = "";
 
         querySnapshot.forEach((doc) => {
           const data = doc.data();
@@ -126,6 +188,15 @@ body {
             <p>${data.story}</p>
             <small>${data.date}</small>
           `;
+
+          // Click to open modal
+          div.addEventListener("click", () => {
+            document.getElementById("modal-title").textContent = data.name;
+            document.getElementById("modal-text").textContent = data.story;
+            document.getElementById("modal-date").textContent = data.date;
+            document.getElementById("story-modal").style.display = "block";
+          });
+
           container.appendChild(div);
         });
       } catch (e) {
@@ -135,6 +206,40 @@ body {
     }
 
     loadStories();
+
+    // Music controls
+    const music = document.getElementById('bg-music');
+    const toggleBtn = document.getElementById('toggle-music');
+
+    toggleBtn.addEventListener('click', () => {
+      if (music.paused) {
+        music.play();
+        music.muted = false;
+        toggleBtn.textContent = "🔇 Pause Music";
+      } else {
+        music.pause();
+        toggleBtn.textContent = "🔊 Play Music";
+      }
+    });
+
+    setTimeout(() => {
+      music.muted = false;
+    }, 1000);
+
+    // Modal controls
+    const modal = document.getElementById("story-modal");
+    const closeBtn = document.querySelector(".close");
+
+    closeBtn.addEventListener("click", () => {
+      modal.style.display = "none";
+    });
+
+    window.addEventListener("click", (e) => {
+      if (e.target === modal) {
+        modal.style.display = "none";
+      }
+    });
   </script>
 </body>
 </html>
+	
