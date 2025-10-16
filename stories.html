@@ -1,46 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Stories Shared</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stories Shared — The Weight We Carry</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg-1: #fbfbfc;
+      --bg-2: #f4eef6;
+      --accent: #6b5b8a;
+      --accent-2: #cda6a2;
+      --muted: #6b6b78;
+      --radius: 14px;
+      --glass-shadow: 0 8px 30px rgba(17,17,25,0.06);
+      --glass-border: rgba(255,255,255,0.45);
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background: #f7f9fb;
-      padding: 20px;
+      margin: 0;
+      font-family: 'Inter', system-ui, sans-serif;
+      background: linear-gradient(180deg, var(--bg-1), var(--bg-2));
+      color: #111;
+      -webkit-font-smoothing: antialiased;
+      padding-bottom: 80px;
     }
-    h1 {
+
+    header {
+      background: linear-gradient(to right, #e8b4b8, #b5838d);
+      color: white;
+      padding: 20px 0;
       text-align: center;
-      color: #3e497a;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
     }
+    header h1 { margin: 0; font-size: 24px; letter-spacing: 0.5px; }
+    header p { margin: 4px 0 0; font-size: 14px; opacity: 0.9; }
+
     .back-home {
-      display: block;
-      width: fit-content;
-      margin: 10px auto;
+      display: inline-block;
+      margin: 20px auto;
       padding: 10px 20px;
-      background: #3e497a;
-      color: #fff;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      color: white;
       text-decoration: none;
-      border-radius: 6px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
-      transition: 0.3s;
+      border-radius: 10px;
+      box-shadow: var(--glass-shadow);
+      font-weight: 600;
+      transition: transform 0.2s ease;
     }
-    .back-home:hover { background: #2c365e; }
+    .back-home:hover { transform: translateY(-2px); }
 
     #toggle-music {
-      display: block;
-      width: fit-content;
-      margin: 10px auto 20px auto;
+      display: inline-block;
+      margin: 5px auto;
       padding: 10px 20px;
-      background: #6c63ff;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: 0.3s;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      color: white;
+      text-decoration: none;
+      border-radius: 25px;
+      box-shadow: var(--glass-shadow);
+      font-weight: 600;
+      transition: transform 0.2s ease;
     }
-    #toggle-music:hover { background: #4b42b5; }
+    #toggle-music:hover  { transform: translateY(-2px); }
+    
 
     #stories-container {
       display: grid;
@@ -49,64 +72,109 @@
       margin-top: 20px;
     }
 
+    /* Floating story-box */
     .story-box {
-      border-radius: 8px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
-      padding: 15px;
-      aspect-ratio: 1 / 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      overflow: hidden;
+      border-radius: var(--radius);
+      background: rgba(255,255,255,0.8);
+      border: 5px solid var(--glass-border);
+      box-shadow: var(--glass-shadow);
+      padding: 20px;
       cursor: pointer;
-      transition: transform 0.2s;
-    }
-    .story-box:hover { transform: scale(1.03); }
-    .story-box h3, .story-box p, .story-box small { transition: color 0.3s; }
+      backdrop-filter: blur(8px);
+      position: relative;
 
-    /* Modal CSS */
+      /* floating animation */
+      animation: float 3s ease-in-out infinite;
+      will-change: transform;
+    }
+    .story-box:hover {
+      transform: scale(1.03);
+      box-shadow: 0 10px 26px rgba(17,17,25,0.08);
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-6px); }
+      100% { transform: translateY(0px); }
+    }
+
+    .story-box h3 { margin: 0 0 8px 0; font-size: 18px; font-weight: 600; color: var(--accent); }
+    .story-box p { margin: 0 0 10px 0; color: #222; font-size: 15px; white-space: pre-wrap; }
+    .story-box small { color: var(--muted); font-size: 13px; }
+
+    .accent-bar {
+      position: absolute; left: 0; top: 0; bottom: 0;
+      width: 6px;
+      border-top-left-radius: var(--radius);
+      border-bottom-left-radius: var(--radius);
+    }
+
     .modal {
       display: none;
       position: fixed;
       z-index: 1000;
-      padding-top: 100px;
       left: 0; top: 0;
       width: 100%; height: 100%;
-      background-color: rgba(0,0,0,0.6);
+      background-color: rgba(0,0,0,0.5);
+      animation: fadeIn 0.3s ease forwards;
     }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
     .modal-content {
-      margin: auto;
-      padding: 20px;
-      border-radius: 10px;
-      width: 80%;
+      margin: 8% auto;
+      padding: 25px;
+      border-radius: 20px;
+      width: 85%;
       max-width: 500px;
-      aspect-ratio: 1 / 1;
-      overflow-y: auto;
-      box-shadow: 0 0 10px rgba(0,0,0,0.3);
-      display: flex;
-      flex-direction: column;
-      transition: color 0.3s;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      background: rgba(255,255,255,0.95);
+      border: 1px solid var(--glass-border);
+      animation: popUp 0.4s ease forwards;
+      backdrop-filter: blur(10px);
     }
-    .close {
-      color: #aaa;
-      font-size: 24px;
-      font-weight: bold;
-      cursor: pointer;
-      align-self: flex-end;
+    @keyframes popUp { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+    .modal-content h3 { margin-top: 0; color: var(--accent); }
+    .close { position: absolute; top: 15px; right: 20px; font-size: 22px; color: #666; cursor: pointer; }
+
+    .empty { text-align: center; color: var(--muted); margin-top: 40px; }
+
+    footer {
+      position: fixed; left: 0; right: 0; bottom: 0;
+      height: 56px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 500; font-size: 14px;
+      box-shadow: 0 -6px 20px rgba(107,91,138,0.14);
     }
-    .close:hover { color: #000; }
   </style>
 </head>
 <body>
-  <h1>📖 Stories Shared</h1>
-  <a href="index.html" class="back-home">🏠 Back to Home</a>
-  <button id="toggle-music">🔊 Play/Pause Music</button>
+  <header>
+    <h1>Stories Shared</h1>
+    <p>Real voices. Real feelings. Shared quietly.</p>
+  </header>
 
-  <div id="stories-container"></div>
+  <div style="text-align:center;">
+    <a href="yoyo.html" class="back-home">🏠 Back to Home</a>
+  </div>
 
-  <audio id="bg-music" autoplay loop muted>
-    <source src="ybsh.mp3" type="audio/mpeg">
+  <!-- Music toggle button -->
+  <div style="text-align:center;">
+  <button id="toggle-music">🔊 Play Music</button>
+  </div>
+  
+  <!-- Background music -->
+  <audio id="bg-music" loop>
+    <source src="your-music-file.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
   </audio>
+
+  <main>
+    <div id="stories-container"></div>
+    <div class="empty" id="empty-msg" style="display:none;">No stories yet. 🌧️</div>
+  </main>
 
   <div id="story-modal" class="modal">
     <div class="modal-content">
@@ -117,11 +185,12 @@
     </div>
   </div>
 
-  <!-- Firebase -->
+  <footer>The Weight We Carry — Where every story matters</footer>
+
+  <!-- Firebase & Music Script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-    import { getFirestore, collection, getDocs } 
-      from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAq-o-H0Noqn2HcIanUyeDC7vjPep-VG9Q",
@@ -136,70 +205,54 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // Helper: detect if color is dark
-    function isDarkColor(hex) {
-      if (!hex) return false;
-      const c = hex.substring(1); // remove #
-      const rgb = parseInt(c, 16); // convert to number
-      const r = (rgb >> 16) & 0xff;
-      const g = (rgb >> 8) & 0xff;
-      const b = (rgb >> 0) & 0xff;
-      const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-      return brightness < 128; // lower = darker
-    }
-
     async function loadStories() {
       const container = document.getElementById("stories-container");
-      container.innerHTML = "<p>Loading stories...</p>";
+      const emptyMsg = document.getElementById("empty-msg");
+      container.innerHTML = "<p style='text-align:center;color:#888;'>Loading stories...</p>";
 
       try {
         const querySnapshot = await getDocs(collection(db, "stories"));
         container.innerHTML = "";
+        if (querySnapshot.empty) {
+          emptyMsg.style.display = "block";
+          return;
+        } else emptyMsg.style.display = "none";
 
         querySnapshot.forEach((doc) => {
           const data = doc.data();
           const div = document.createElement("div");
           div.classList.add("story-box");
-
-          const bgColor = data.color || "#ffffff";
-          div.style.background = bgColor;
-
-          // Auto-set text color based on background
-          const textColor = isDarkColor(bgColor) ? "white" : "black";
-          div.style.color = textColor;
+          div.style.animationDelay = `${Math.random() * 2}s`;
+          const color = data.color || "#cda6a2";
 
           div.innerHTML = `
-            <h3>${data.name}</h3>
-            <p>${data.story}</p>
-            <small>${data.date}</small>
+            <div class="accent-bar" style="background:${color}"></div>
+            <h3>${data.name || "Anonymous"}</h3>
+            <p>${data.story?.length > 100 ? data.story.substring(0, 100) + "..." : data.story}</p>
+            <small>${data.date || ""}</small>
           `;
 
           div.addEventListener("click", () => {
             const modal = document.getElementById("story-modal");
-            const modalContent = document.querySelector(".modal-content");
-            const title = document.getElementById("modal-title");
-            const text = document.getElementById("modal-text");
-            const date = document.getElementById("modal-date");
-
-            title.textContent = data.name;
-            text.textContent = data.story;
-            date.textContent = data.date;
+            document.getElementById("modal-title").textContent = data.name || "Anonymous";
+            document.getElementById("modal-text").textContent = data.story || "";
+            document.getElementById("modal-date").textContent = data.date || "";
             modal.style.display = "block";
-
-            // Match modal background + text color
-            modalContent.style.background = bgColor;
-            modalContent.style.color = textColor;
           });
-
           container.appendChild(div);
         });
       } catch (e) {
-        console.error("Error loading stories: ", e);
-        container.innerHTML = "<p>Failed to load stories.</p>";
+        console.error("Error loading stories:", e);
+        container.innerHTML = "<p style='text-align:center;color:red;'>Failed to load stories.</p>";
       }
     }
 
     loadStories();
+
+    const modal = document.getElementById("story-modal");
+    const closeBtn = document.querySelector(".close");
+    closeBtn.addEventListener("click", () => { modal.style.display = "none"; });
+    window.addEventListener("click", (e) => { if (e.target === modal) modal.style.display = "none"; });
 
     // Music controls
     const music = document.getElementById('bg-music');
@@ -207,22 +260,16 @@
     toggleBtn.addEventListener('click', () => {
       if (music.paused) {
         music.play();
-        music.muted = false;
         toggleBtn.textContent = "🔇 Pause Music";
       } else {
         music.pause();
         toggleBtn.textContent = "🔊 Play Music";
       }
     });
-    setTimeout(() => { music.muted = false; }, 1000);
 
-    // Modal controls
-    const modal = document.getElementById("story-modal");
-    const closeBtn = document.querySelector(".close");
-    closeBtn.addEventListener("click", () => { modal.style.display = "none"; });
-    window.addEventListener("click", (e) => {
-      if (e.target === modal) modal.style.display = "none";
-    });
+    // Auto-mute first (browser safe)
+    music.muted = true;
+    setTimeout(() => { music.muted = false; }, 1000);
   </script>
 </body>
 </html>
