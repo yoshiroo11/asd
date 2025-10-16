@@ -6,52 +6,126 @@
   <title>The Weight We Carry</title>
 
   <style>
+    :root {
+      --accent: #e8b4b8;
+      --accent-2: #b5838d;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background: #ffffff;
+      font-family: 'Poppins', sans-serif;
+      background: white;
+      color: white;
       margin: 0;
       padding: 0;
     }
+
     header {
-      background: #cda6a2;
+      background: linear-gradient(to right, #e8b4b8, #b5838d);
       color: white;
-      padding: 20px 0;
+      padding: 25px 0;
       text-align: center;
+      letter-spacing: 1px;
+      font-size: 20px;
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
     }
+
     nav {
-      background: #2c3e50;
+      background: rgba(181, 131, 141, 0.9);
       display: flex;
       justify-content: center;
-      padding: 10px;
+      padding: 12px;
+      backdrop-filter: blur(5px);
     }
+
     nav a {
       color: white;
       text-decoration: none;
-      margin: 0 20px;
-      font-weight: bold;
+      margin: 0 25px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      transition: color 0.3s ease;
     }
-    nav a:hover { text-decoration: underline; }
+
+    nav a:hover {
+      color: #ffe5ec;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 60px 20px;
+    }
+
     section {
-      padding: 40px;
-      max-width: 900px;
-      margin: auto;
+      margin-bottom: 80px;
     }
-    h2 { text-align: center; color: #3e497a; }
-    p { font-size: 18px; line-height: 1.6; color: #333; }
+
+    #home, #about, #share {
+      border-radius: 20px;
+      padding: 50px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+    #home { background-color: #f7e6e8; }
+    #about { background-color: #f4d9dc; }
+    #share { background-color: #f9ecef; }
+
+    h2, h3 { text-align: center; color: #3e497a; }
+    p { font-size: 18px; line-height: 1.6; color: #000; }
+
+    .welcome-container, .about-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 50px;
+      flex-wrap: wrap;
+      border-radius: 20px;
+      background: linear-gradient(to right, #fff, #f3e9e8);
+      padding: 50px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+    .about-container { background: linear-gradient(to left, #fff, #f3e9e8); }
+
+    .welcome-text, .about-text { flex: 1; min-width: 300px; }
+    .welcome-image, .about-image { flex: 1; min-width: 300px; text-align: center; }
+
+    img {
+      width: 80%;
+      border-radius: 20px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+      object-fit: cover;
+    }
+
     form {
       background: #ffffff;
-      padding: 20px;
-      border-radius: 8px;
+      padding: 25px;
+      border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-width: 700px;
+      margin: 0 auto;
     }
-    label { display: block; margin-top: 10px; font-weight: bold; }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+      color: #3e497a;
+      text-align: left;
+      max-width: 600px;
+      margin-inline: auto;
+    }
+
     input, textarea {
-      width: 100%;
+      width: 90%;
+      max-width: 600px;
+      display: block;
+      margin: 5px auto 15px;
       padding: 10px;
-      margin-top: 5px;
       border: 1px solid #ccc;
       border-radius: 5px;
     }
+
+    textarea { height: 120px; }
+
     button {
       margin-top: 15px;
       padding: 10px 20px;
@@ -61,10 +135,11 @@
       border-radius: 5px;
       cursor: pointer;
       font-size: 16px;
+      transition: background 0.3s;
     }
+
     button:hover { background: #2c3e50; }
 
-    /* color picker grid */	
     .color-grid {
       display: grid;
       grid-template-columns: repeat(5, 40px);
@@ -72,6 +147,7 @@
       justify-content: center;
       margin-top: 10px;
     }
+
     .color-option {
       width: 40px;
       height: 40px;
@@ -80,18 +156,39 @@
       cursor: pointer;
       transition: transform 0.2s;
     }
+
     .color-option:hover { transform: scale(1.1); }
     .color-option.selected { border: 3px solid #3e497a; }
 
-    footer {
-      text-align: center;
-      padding: 15px;
-      background: #3e497a;
+    .ticker {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
       color: white;
-      margin-top: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      white-space: nowrap;
+      height: 40px;
+      border-top: 2px solid #ffffff;
+      z-index: 9999;
     }
 
-    /* Popup overlay */
+    .ticker-text {
+      display: inline-block;
+      padding-left: 100%;
+      animation: scrollText 40s linear infinite;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    @keyframes scrollText {
+      from { transform: translateX(100%); }
+      to { transform: translateX(-100%); }
+    }
+
     #thankyou-message {
       display: none;
       position: fixed;
@@ -102,115 +199,31 @@
       justify-content: center;
       align-items: center;
     }
+
     #thankyou-message .popup-content {
       background: #fff;
-      padding: 20px;
-      border-radius: 12px;
+      padding: 40px;
+      border-radius: 20px;
       text-align: center;
-      max-width: 400px;
       animation: fadeIn 0.4s ease-in-out;
-      position: relative;
+      color: #3e497a;
     }
-    #thankyou-message img { max-width: 150px; margin-top: 10px; }
-    #thankyou-message .close-btn {
-      position: absolute;
-      top: 10px; right: 10px;
-      background: #3e497a;
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 30px; height: 30px;
-      font-size: 18px;
-      cursor: pointer;
-    }
-    #thankyou-message .close-btn:hover { background: #2c3e50; }
 
     @keyframes fadeIn {
       from { transform: scale(0.8); opacity: 0; }
       to { transform: scale(1); opacity: 1; }
     }
 
-    /* Welcome Section Layout */
-    .welcome-container {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 30px;
-      flex-wrap: wrap;
-    }
-    .welcome-text {
-      flex: 1;
-      min-width: 250px;
-    }
-    .welcome-image {
-      flex: 1;
-      min-width: 250px;
-      text-align: center;
-    }
-    .welcome-image img {
-      max-width: 100%;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    }
-
-    /* ✅ About Section Layout */
-    .about-container {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 30px;
-      flex-wrap: wrap;
-    }
-    .about-text {
-      flex: 1;
-      min-width: 300px;
-    }
-    .about-image {
-      flex: 1;
-      min-width: 300px;
-      text-align: center;
-    }
-    .about-image img {
-      max-width: 100%;
-      height: auto;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-      object-fit: cover;
-    }
-
-    /* ✅ Slowed Ticker */
-    .ticker {
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      background: #3e497a;
-      color: white;
-      overflow: hidden;
-      white-space: nowrap;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      border-top: 2px solid #2c3e50;
-      z-index: 9999;
-    }
-    .ticker-text {
-      display: inline-block;
-      padding-left: 100%;
-      animation: scrollText 40s linear infinite; /* 🔹 slowed down */
-      font-size: 18px;
-      font-weight: bold;
-    }
-    @keyframes scrollText {
-      from { transform: translateX(100%); }
-      to { transform: translateX(-100%); }
+    @media (max-width: 768px) {
+      .welcome-container, .about-container { flex-direction: column; text-align: center; }
+      input, textarea { width: 95%; }
+      img { width: 100%; }
     }
   </style>
 </head>
-<body>
 
-  <header>
-    <h1>The Weight We Carry</h1>
-  </header>
+<body>
+  <header><h1>The Weight We Carry</h1></header>
 
   <nav>
     <a href="#home">Home</a>
@@ -218,101 +231,72 @@
     <a href="#share">Share Your Story</a>
   </nav>
 
-  <!-- ✅ Updated Welcome Section -->
-  <section id="home">
-    <div class="welcome-container">
-      <div class="welcome-text">
-        <h2>Welcome</h2>
-        <p>
-          Each of us carries invisible burdens — struggles, worries, and emotions that we keep locked away out of fear of judgment. 
-          <strong>The Weight We Carry</strong> is here to remind you that you don’t have to. 
-          This space is created as a safe corner where you can finally put those feelings into words and release them.
-        </p>
+  <main>
+    <section id="home">
+      <div class="welcome-container">
+        <div class="welcome-text">
+          <h2>Welcome</h2>
+          <p>Each of us carries invisible burdens — struggles, worries, and emotions that we keep locked away out of fear of judgment. <strong>The Weight We Carry</strong> is here to remind you that you don’t have to. This space is created as a safe corner where you can finally put those feelings into words and release them.</p>
+        </div>
+        <div class="welcome-image"><img src="aws.png" alt="Welcome image" /></div>
       </div>
-      <div class="welcome-image">
-        <img src="Van.jpg" alt="Welcome image">
+    </section>
+
+    <section id="about">
+      <div class="about-container">
+        <div class="about-image"><img src="med.jpg" alt="About The Website" /></div>
+        <div class="about-text">
+          <h2>About This Website</h2>
+          <p><strong>The Weight We Carry</strong> speaks about the silent battles we all face. Life can be overwhelming, and many of us hide our pain behind smiles. But healing starts with expression — with sharing our stories and realizing that we’re not alone in our struggles.</p>
+          <p>This website is a gentle reminder that opening up is not a sign of weakness — it’s an act of courage. Here, you can share your thoughts, feelings, and experiences without fear. Together, we can lighten the weight we carry.</p>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- ✅ About Section with med.jpg on the left -->
-  <section id="about">
-    <div class="about-container">
-      <div class="about-image">
-        <img src="clown.jpg" alt="About The Website">
+    <section id="share">
+      <h2>Share Your Story</h2>
+      <p style="color:black;text-align:center;">Use the form below to express what’s on your heart. Choose a color that matches your mood before submitting.</p>
+
+      <form id="storyForm">
+        <label for="name">Name (optional):</label>
+        <input type="text" id="name" name="name" placeholder="Enter your name..." />
+        <label for="story">Your Story:</label>
+        <textarea id="story" name="story" placeholder="Write your thoughts or story here..."></textarea>
+        <label><center>Choose a Color:</center></label>
+        <div class="color-grid" id="colorGrid">
+          <div class="color-option" style="background:#000;" data-color="#000"></div>
+          <div class="color-option" style="background:#3e497a;" data-color="#3e497a"></div>
+          <div class="color-option" style="background:#ff595e;" data-color="#ff595e"></div>
+          <div class="color-option" style="background:#8ac926;" data-color="#8ac926"></div>
+          <div class="color-option" style="background:#1982c4;" data-color="#1982c4"></div>
+          <div class="color-option" style="background:#6a4c93;" data-color="#6a4c93"></div>
+          <div class="color-option" style="background:#ffca3a;" data-color="#ffca3a"></div>
+          <div class="color-option" style="background:#ff9f1c;" data-color="#ff9f1c"></div>
+          <div class="color-option" style="background:#b5838d;" data-color="#b5838d"></div>
+          <div class="color-option" style="background:#e5989b;" data-color="#e5989b"></div>
+        </div>
+        <center><button type="submit">Submit</button></center>
+      </form>
+
+      <div id="thankyou-message">
+        <div class="popup-content">
+          <h2> Thank you for sharing your story!</h2>
+          <p>Your words matter. 💙</p>
+        </div>
       </div>
-      <div class="about-text">
-        <h2>About This Website</h2>
-        <p>
-          <strong>The Weight We Carry</strong> speaks about the silent battles we all face. Life can be overwhelming, and many of us hide our pain behind smiles. 
-          But healing starts with expression — with sharing our stories and realizing that we’re not alone in our struggles.
-        </p>
-        <p>
-          This website is a gentle reminder that opening up is not a sign of weakness — it’s an act of courage.
-          Here, you can share your thoughts, feelings, and experiences without fear. Together, we can lighten the weight we carry.
-        </p>
-      </div>
-    </div>
-  </section>
 
-  <section id="share">
-    <h2>Share Your Story</h2>
-    <p>Use the form below to express what’s on your heart. Choose a color that matches your mood before submitting.</p>
-
-    <form id="storyForm">
-      <label for="name">Name (optional):</label>
-      <input type="text" id="name" name="name" placeholder="Enter your name...">
-
-      <label for="story">Your Story:</label>
-      <textarea id="story" name="story" rows="6" placeholder="Write your thoughts, feelings, or story here..."></textarea>
-
-      <center><label>Choose a Color:</label></center>
-      <div class="color-grid" id="colorGrid">
-        <div class="color-option" style="background:#000;" data-color="#000"></div>
-        <div class="color-option" style="background:#3e497a;" data-color="#3e497a"></div>
-        <div class="color-option" style="background:#ff595e;" data-color="#ff595e"></div>
-        <div class="color-option" style="background:#8ac926;" data-color="#8ac926"></div>
-        <div class="color-option" style="background:#1982c4;" data-color="#1982c4"></div>
-        <div class="color-option" style="background:#6a4c93;" data-color="#6a4c93"></div>
-        <div class="color-option" style="background:#ffca3a;" data-color="#ffca3a"></div>
-        <div class="color-option" style="background:#ff9f1c;" data-color="#ff9f1c"></div>
-        <div class="color-option" style="background:#b5838d;" data-color="#b5838d"></div>
-        <div class="color-option" style="background:#e5989b;" data-color="#e5989b"></div>
-      </div>	  
-
-      <center><button type="submit">Submit</button></center>
-    </form>
-
-    <div id="thankyou-message">
-      <div class="popup-content">
-        <button class="close-btn">&times;</button>
-        <h2>✅ Thank you for sharing your story!</h2>
-        <p>Your words matter. 💙</p>
-        <img src="van.jpg" alt="Thank you image">
-      </div>
-    </div>
-
-    <center>
       <h3>📖 Stories Shared:</h3>
-      <p><a href="stories.html" target="_blank">View all shared stories here</a></p>
-    </center>
-  </section>
-
-  <footer>
-    &copy; 2025 The Weight We Carry | You're not alone.
-  </footer>
+      <p style="text-align:center;"><a href="stories.html" target="_blank">View all shared stories here</a></p>
+    </section>
+  </main>
 
   <div class="ticker">
     <div class="ticker-text">
-      The Weight We Carry - You're not Alone. Share Your Story Today hotlines:
-      — NCMH Crisis Hotline • Smart: 0919-057-1553 • Globe: 0917-899-8727 —
-      Tawag Paglaum - Centro Bisaya • 0966-467-9626 • 0939-936-5433 • 0939-937-5433 —
-      Hopeline Philippines (Natasha Goulbourn Foundation) • 0917-558-4673 • 0918-873-4673 —
-      In Touch: Crisis Line • 0919-056-0709 • 0917-800-1123 • 0922-893-8944
+      The Weight We Carry - You're not Alone. Share Your Story Today — Crisis Hotlines: NCMH: 0917-899-8727 • Hopeline: 0917-558-4673 • In Touch: 0919-056-0709
     </div>
   </div>
 
-  <!-- Firebase -->
+  <!-- Firebase Integration -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
     import { getFirestore, collection, addDoc } 
@@ -343,11 +327,9 @@
 
     const form = document.getElementById("storyForm");
     const thankyouDiv = document.getElementById("thankyou-message");
-    const closeBtn = document.querySelector("#thankyou-message .close-btn");
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
-
       const name = document.getElementById("name").value || "Anonymous";
       const story = document.getElementById("story").value;
 
@@ -358,16 +340,11 @@
 
       try {
         await addDoc(collection(db, "stories"), {
-          name: name,
-          story: story,
-          color: selectedColor,
-          date: new Date().toLocaleString()
+          name, story, color: selectedColor, date: new Date().toLocaleString()
         });
 
         thankyouDiv.style.display = "flex";
-        setTimeout(() => {
-          thankyouDiv.style.display = "none";
-        }, 3000);
+        setTimeout(() => { thankyouDiv.style.display = "none"; }, 3000);
 
         form.reset();
         colorOptions.forEach(o => o.classList.remove("selected"));
@@ -378,19 +355,6 @@
         alert("Something went wrong while saving your story.");
       }
     });
-
-    closeBtn.addEventListener("click", () => {
-      thankyouDiv.style.display = "none";
-    });
-
-    const emojiOptions = document.querySelectorAll('.emoji-option');
-    emojiOptions.forEach(option => {
-      option.addEventListener('click', () => {
-        alert(`You selected: ${option.dataset.emoji}`);
-      });
-    });
   </script>
 </body>
 </html>
-w
-
