@@ -214,10 +214,51 @@
       to { transform: scale(1); opacity: 1; }
     }
 
+    /* ✅ IMPROVED MOBILE STYLING */
     @media (max-width: 768px) {
-      .welcome-container, .about-container { flex-direction: column; text-align: center; }
-      input, textarea { width: 95%; }
-      img { width: 100%; }
+      .welcome-container, .about-container {
+        flex-direction: column;
+        text-align: center;
+        padding: 20px; /* reduce padding for mobile */
+        gap: 20px; /* reduce gap */
+      }
+
+      .welcome-text, .about-text, .welcome-image, .about-image {
+        flex: unset;
+        min-width: 100%;
+      }
+
+      img {
+        width: 100%;
+        height: auto; /* maintain aspect ratio */
+      }
+
+      input, textarea {
+        width: 95%;
+      }
+
+      form {
+        padding: 20px;
+      }
+
+      nav {
+        flex-direction: column;
+        text-align: center;
+        padding: 10px;
+      }
+
+      nav a {
+        margin: 8px 0;
+        display: block;
+      }
+
+      section {
+        margin-bottom: 50px;
+      }
+
+      main {
+        padding: 30px 10px;
+      }
     }
   </style>
 </head>
