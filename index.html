@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>The Weight We Carry</title>
 
   <style>
@@ -214,13 +212,12 @@
       to { transform: scale(1); opacity: 1; }
     }
 
-    /* ✅ IMPROVED MOBILE STYLING */
     @media (max-width: 768px) {
       .welcome-container, .about-container {
         flex-direction: column;
         text-align: center;
-        padding: 20px; /* reduce padding for mobile */
-        gap: 20px; /* reduce gap */
+        padding: 20px;
+        gap: 20px;
       }
 
       .welcome-text, .about-text, .welcome-image, .about-image {
@@ -230,7 +227,7 @@
 
       img {
         width: 100%;
-        height: auto; /* maintain aspect ratio */
+        height: auto;
       }
 
       input, textarea {
@@ -298,11 +295,13 @@
       <h2>Share Your Story</h2>
       <p style="color:black;text-align:center;">Use the form below to express what’s on your heart. Choose a color that matches your mood before submitting.</p>
 
-      <form id="storyForm">
+      <form id="storyForm" autocomplete="off">
         <label for="name">Name (optional):</label>
-        <input type="text" id="name" name="name" placeholder="Enter your name..." />
+        <input type="text" id="name" name="name" placeholder="Enter your name..." autocomplete="off" />
+        
         <label for="story">Your Story:</label>
-        <textarea id="story" name="story" placeholder="Write your thoughts or story here..."></textarea>
+        <textarea id="story" name="story" placeholder="Write your thoughts or story here..." autocomplete="off"></textarea>
+        
         <label><center>Choose a Color:</center></label>
         <div class="color-grid" id="colorGrid">
           <div class="color-option" style="background:#000;" data-color="#000"></div>
@@ -316,13 +315,14 @@
           <div class="color-option" style="background:#b5838d;" data-color="#b5838d"></div>
           <div class="color-option" style="background:#e5989b;" data-color="#e5989b"></div>
         </div>
+        
         <center><button type="submit">Submit</button></center>
       </form>
 
       <div id="thankyou-message">
         <div class="popup-content">
           <h2> Thank you for sharing your story!</h2>
-          <p>Your words matter. 💙</p>
+          <p>Your words matter.</p>
         </div>
       </div>
 
@@ -337,7 +337,7 @@
     </div>
   </div>
 
-  <!-- Firebase Integration -->
+  <!-- firebase -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
     import { getFirestore, collection, addDoc } 
