@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Stories Shared — The Weight We Carry</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
@@ -63,7 +61,6 @@
       transition: transform 0.2s ease;
     }
     #toggle-music:hover  { transform: translateY(-2px); }
-    
 
     #stories-container {
       display: grid;
@@ -72,7 +69,6 @@
       margin-top: 20px;
     }
 
-    /* Floating story-box */
     .story-box {
       border-radius: var(--radius);
       background: rgba(255,255,255,0.8);
@@ -82,8 +78,6 @@
       cursor: pointer;
       backdrop-filter: blur(8px);
       position: relative;
-
-      /* floating animation */
       animation: float 3s ease-in-out infinite;
       will-change: transform;
     }
@@ -131,6 +125,7 @@
       border: 1px solid var(--glass-border);
       animation: popUp 0.4s ease forwards;
       backdrop-filter: blur(10px);
+      position: relative;
     }
     @keyframes popUp { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
@@ -157,40 +152,44 @@
   </header>
 
   <div style="text-align:center;">
-    <a href="index.html" class="back-home">🏠 Back to Home</a>
+    <a href="yoyo.html" class="back-home">🏠 Back to Home</a>
   </div>
 
-  <!-- Music toggle button -->
   <div style="text-align:center;">
-  <button id="toggle-music">🔊 Play Music</button>
+    <button id="toggle-music">🔊 Play/Pause</button>
   </div>
-  
-  <!-- Background music -->
-  <audio id="bg-music" loop>
-    <source src="your-music-file.mp3" type="audio/mpeg">
+
+  <audio id="bg-music" loop muted>
+    <source src="ybsh.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
   </audio>
 
   <main>
     <div id="stories-container"></div>
-    <div class="empty" id="empty-msg" style="display:none;">No stories yet. 🌧️</div>
+    <div class="empty" id="empty-msg" style="display:none;">No stories yet.</div>
   </main>
 
+  
   <div id="story-modal" class="modal">
-    <div class="modal-content">
+    <div class="modal-content"> 
       <span class="close">&times;</span>
       <h3 id="modal-title"></h3>
       <p id="modal-text"></p>
       <small id="modal-date"></small>
+
+      <hr style="margin:15px 0; border:none; border-top:1px solid #ddd;">
+      <div id="replies-container" style="max-height:150px;overflow-y:auto;margin-bottom:10px;"></div>
+
+      <textarea id="reply-input" placeholder="Write a reply..." style="width:100%;border-radius:8px;border:1px solid #ccc;padding:8px;resize:none;"></textarea>
+      <button id="send-reply" style="margin-top:8px;background:var(--accent);color:white;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;">Send Reply</button>
     </div>
   </div>
 
   <footer>The Weight We Carry — Where every story matters</footer>
 
-  <!-- Firebase & Music Script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, addDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAq-o-H0Noqn2HcIanUyeDC7vjPep-VG9Q",
@@ -218,8 +217,8 @@
           return;
         } else emptyMsg.style.display = "none";
 
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
+        querySnapshot.forEach((docSnap) => {
+          const data = docSnap.data();
           const div = document.createElement("div");
           div.classList.add("story-box");
           div.style.animationDelay = `${Math.random() * 2}s`;
@@ -232,13 +231,51 @@
             <small>${data.date || ""}</small>
           `;
 
-          div.addEventListener("click", () => {
+          div.addEventListener("click", async () => {
             const modal = document.getElementById("story-modal");
+            const repliesContainer = document.getElementById("replies-container");
+            const replyInput = document.getElementById("reply-input");
+            const sendBtn = document.getElementById("send-reply");
+
+            const storyId = docSnap.id;
             document.getElementById("modal-title").textContent = data.name || "Anonymous";
             document.getElementById("modal-text").textContent = data.story || "";
             document.getElementById("modal-date").textContent = data.date || "";
             modal.style.display = "block";
+
+            
+            repliesContainer.innerHTML = "<p style='color:#666;'>Loading replies...</p>";
+            const repliesRef = collection(db, "stories", storyId, "replies");
+            const replySnap = await getDocs(repliesRef);
+            if (replySnap.empty) {
+              repliesContainer.innerHTML = "<p style='color:#999;font-size:14px;'>No replies yet.</p>";
+            } else {
+              repliesContainer.innerHTML = "";
+              replySnap.forEach(r => {
+                const rep = r.data();
+                const div = document.createElement("div");
+                div.style.marginBottom = "8px";
+                div.innerHTML = `<strong>${rep.name || "Anonymous"}:</strong> ${rep.text}`;
+                repliesContainer.appendChild(div);
+              });
+            }
+
+            
+            sendBtn.onclick = async () => {
+              const replyText = replyInput.value.trim();
+              if (!replyText) return alert("Please write something first!");
+              await addDoc(collection(db, "stories", storyId, "replies"), {
+                name: "Unknown",
+                text: replyText,
+                date: new Date().toLocaleString()
+              });
+              const newDiv = document.createElement("div");
+              newDiv.innerHTML = `<strong>Unknown:</strong> ${replyText}`;
+              repliesContainer.appendChild(newDiv);
+              replyInput.value = "";
+            };
           });
+
           container.appendChild(div);
         });
       } catch (e) {
@@ -254,22 +291,44 @@
     closeBtn.addEventListener("click", () => { modal.style.display = "none"; });
     window.addEventListener("click", (e) => { if (e.target === modal) modal.style.display = "none"; });
 
-    // Music controls
+    // background music
     const music = document.getElementById('bg-music');
     const toggleBtn = document.getElementById('toggle-music');
-    toggleBtn.addEventListener('click', () => {
+
+    const startMusic = async () => {
+      try {
+        await music.play();
+        music.muted = false;
+        let v = 0;
+        const fade = setInterval(() => {
+          if (v < 0.3) {
+            v += 0.03;
+            music.volume = v;
+          } else clearInterval(fade);
+        }, 300);
+      } catch {
+        console.log("Autoplay blocked — waiting for user interaction.");
+      }
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+      music.volume = 0;
+      startMusic(); 
+    });
+
+    document.addEventListener("click", () => {
+      if (music.paused) startMusic();
+    }, { once: true });
+
+    toggleBtn.addEventListener("click", () => {
       if (music.paused) {
-        music.play();
+        startMusic();
         toggleBtn.textContent = "🔇 Pause Music";
       } else {
         music.pause();
         toggleBtn.textContent = "🔊 Play Music";
       }
     });
-
-    // Auto-mute first (browser safe)
-    music.muted = true;
-    setTimeout(() => { music.muted = false; }, 1000);
   </script>
 </body>
 </html>
