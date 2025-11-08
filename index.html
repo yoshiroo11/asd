@@ -4,8 +4,259 @@
   <title>The Weight We Carry</title>
 
   <style>
-    /* ... your existing CSS here unchanged ... */
-    /* (omitted for brevity, keep all your current CSS) */
+    :root {
+      --accent: #e8b4b8;
+      --accent-2: #b5838d;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: white;
+      color: white;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: linear-gradient(to right, #e8b4b8, #b5838d);
+      color: white;
+      padding: 25px 0;
+      text-align: center;
+      letter-spacing: 1px;
+      font-size: 20px;
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    nav {
+      background: rgba(181, 131, 141, 0.9);
+      display: flex;
+      justify-content: center;
+      padding: 12px;
+      backdrop-filter: blur(5px);
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 25px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      transition: color 0.3s ease;
+    }
+
+    nav a:hover {
+      color: #ffe5ec;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 60px 20px;
+    }
+
+    section {
+      margin-bottom: 80px;
+    }
+
+    #home, #about, #share {
+      border-radius: 20px;
+      padding: 50px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+    #home { background-color: #f7e6e8; }
+    #about { background-color: #f4d9dc; }
+    #share { background-color: #f9ecef; }
+
+    h2, h3 { text-align: center; color: #3e497a; }
+    p { font-size: 18px; line-height: 1.6; color: #000; }
+
+    .welcome-container, .about-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 50px;
+      flex-wrap: wrap;
+      border-radius: 20px;
+      background: linear-gradient(to right, #fff, #f3e9e8);
+      padding: 50px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+    .about-container { background: linear-gradient(to left, #fff, #f3e9e8); }
+
+    .welcome-text, .about-text { flex: 1; min-width: 300px; }
+    .welcome-image, .about-image { flex: 1; min-width: 300px; text-align: center; }
+
+    img {
+      width: 80%;
+      border-radius: 20px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+      object-fit: cover;
+    }
+
+    form {
+      background: #ffffff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+      color: #3e497a;
+      text-align: left;
+      max-width: 600px;
+      margin-inline: auto;
+    }
+
+    input, textarea {
+      width: 90%;
+      max-width: 600px;
+      display: block;
+      margin: 5px auto 15px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    textarea { height: 120px; }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background: #3e497a;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.3s;
+    }
+
+    button:hover { background: #2c3e50; }
+
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 40px);
+      gap: 8px;
+      justify-content: center;
+      margin-top: 10px;
+    }
+
+    .color-option {
+      width: 40px;
+      height: 40px;
+      border-radius: 6px;
+      border: 2px solid #ccc;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .color-option:hover { transform: scale(1.1); }
+    .color-option.selected { border: 3px solid #3e497a; }
+
+    .ticker {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      white-space: nowrap;
+      height: 40px;
+      border-top: 2px solid #ffffff;
+      z-index: 9999;
+    }
+
+    .ticker-text {
+      display: inline-block;
+      padding-left: 100%;
+      animation: scrollText 40s linear infinite;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    @keyframes scrollText {
+      from { transform: translateX(100%); }
+      to { transform: translateX(-100%); }
+    }
+
+    #thankyou-message {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #thankyou-message .popup-content {
+      background: #fff;
+      padding: 40px;
+      border-radius: 20px;
+      text-align: center;
+      animation: fadeIn 0.4s ease-in-out;
+      color: #3e497a;
+    }
+
+    @keyframes fadeIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    @media (max-width: 768px) {
+      .welcome-container, .about-container {
+        flex-direction: column;
+        text-align: center;
+        padding: 20px;
+        gap: 20px;
+      }
+
+      .welcome-text, .about-text, .welcome-image, .about-image {
+        flex: unset;
+        min-width: 100%;
+      }
+
+      img {
+        width: 100%;
+        height: auto;
+      }
+
+      input, textarea {
+        width: 95%;
+      }
+
+      form {
+        padding: 20px;
+      }
+
+      nav {
+        flex-direction: column;
+        text-align: center;
+        padding: 10px;
+      }
+
+      nav a {
+        margin: 8px 0;
+        display: block;
+      }
+
+      section {
+        margin-bottom: 50px;
+      }
+
+      main {
+        padding: 30px 10px;
+      }
+    }
   </style>
 </head>
 
@@ -86,8 +337,25 @@
     </div>
   </div>
 
-  <!-- Replace Firebase with Python backend submission -->
-  <script>
+  <!-- firebase -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    import { getFirestore, collection, addDoc } 
+      from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAq-o-H0Noqn2HcIanUyeDC7vjPep-VG9Q",
+      authDomain: "website-62fcc.firebaseapp.com",
+      projectId: "website-62fcc",
+      storageBucket: "website-62fcc.firebasestorage.app",
+      messagingSenderId: "644610818809",
+      appId: "1:644610818809:web:bd674cc3c6746eefa19828",
+      measurementId: "G-0RGSECJH7J"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
     let selectedColor = "#000";
     const colorOptions = document.querySelectorAll(".color-option");
     colorOptions.forEach(option => {
@@ -112,18 +380,9 @@
       }
 
       try {
-        const response = await fetch("http://127.0.0.1:5000/submit-story", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, story, color: selectedColor }),
+        await addDoc(collection(db, "stories"), {
+          name, story, color: selectedColor, date: new Date().toLocaleString()
         });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          alert(data.error || "Something went wrong.");
-          return;
-        }
 
         thankyouDiv.style.display = "flex";
         setTimeout(() => { thankyouDiv.style.display = "none"; }, 3000);
@@ -133,11 +392,10 @@
         selectedColor = "#000";
 
       } catch (err) {
-        console.error("Error submitting story:", err);
-        alert("Failed to submit your story.");
+        console.error("Error adding document:", err);
+        alert("Something went wrong while saving your story.");
       }
     });
   </script>
-
 </body>
 </html>
